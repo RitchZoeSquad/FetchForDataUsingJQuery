@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS `Webapp.html`.`users` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+`word` VARCHAR(45) NULL,
+ PRIMARY KEY (`id`))
+ENGINE = InnoDB;

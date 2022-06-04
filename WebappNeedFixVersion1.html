@@ -26,12 +26,70 @@
                             output += "<p>" + response[i].meanings[0].definitions[0].definition + "</p>";
                             output += "<p>" + response[i].meanings[0].definitions[0].example + "</p>";
                         }
+
+
                         document.getElementById("result").innerHTML = output;
+
                     }
+
+        $output = $_POST['output'];
+        $sql = "INSERT INTO `words` (`word`) VALUES ('$output')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "New record created successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+
+
+    $.ajax({
+        url: "post.php" + word,
+        type: "GET",
+        headers: {
+            "Accept": "application/json",
+            "Webapp.html": "",
+            "word": ""
+        },
+        success: function (response) {
+            var output = "";
+            for (var i in response.results) {
+                output += "<h2>" + response.results[i].word + "</h2>";
+
+                output += "<p>" + response.results[i].lexicalEntries[0].pronunciations[0].phoneticSpelling + "</p>";
+
+                output += "<p>" + response.results[i].lexicalEntries[0].entries[0].senses[0].definitions[0] + "</p>";
+                output += "<p>" + response.results[i].lexicalEntries[0].entries[0].senses[0].examples[0].text + "</p>";
+            }
+
+
+            document.getElementById("result").innerHTML = output;
+
+        }
+    });
+
+
+
                 };
+
                 xhttp.open("GET", url, true);
                 xhttp.send();
             }
+            function submitWordToDatabase() {
+                var word = document.getElementById("word").value;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("word").innerHTML = this.responseText;
+                    }
+                };
+                xhttp.open("POST", "post.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("word="+word);
+            }
+
+
+
+
         </script>
 
 
@@ -45,6 +103,12 @@
                             <input type="text" class="form-control" id="word" placeholder="Enter word">
                         </div>
                         <button type="button" class="btn btn-primary" onclick="getWord()">Submit</button>
+
+
+
+
+
+
                     </form>
                 </div>
             </div>
