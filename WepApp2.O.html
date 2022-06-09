@@ -39,6 +39,10 @@
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
+                    console.log('response: '+ response);
+                    for (var i = 0; i < response.length; i++) {
+                        console.log('response['+i+']: '+ JSON.stringify(response[i]));
+                    }
                     var output = "";
                     for (var i = 0; i < response.length; i++) {
                         output += "<h2>" + response[i].word + "</h2>";
@@ -51,6 +55,26 @@
                         $.ajax({
                             type: "POST",
                             url: "http://localhost/webapp/db_connection.php",
+                            //if I want to use webhook go ahead and replace ajax to webhook
+                            //https://connect.pabbly.com/workflow/sendwebhookdata/IjQwNDEzNyI_3D
+
+                            crossDomain: true,
+
+                            data: {
+                                "word": response[i].word,
+                                "phonetics": response[i].phonetics[0].text,
+                                "definition": response[i].meanings[0].definitions[0].definition
+                            },
+                            success: function (response) {
+                                console.log(response);
+                            }
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "https://connect.pabbly.com/workflow/sendwebhookdata/IjQwNDEzNyI_3D",
+                            //if I want to use webhook go ahead and replace ajax to webhook
+                            //https://connect.pabbly.com/workflow/sendwebhookdata/IjQwNDEzNyI_3D
+
                             crossDomain: true,
 
                             data: {
