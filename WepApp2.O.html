@@ -1,0 +1,86 @@
+
+<html>
+<head>
+
+    <title>Webapp</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Dictionary API</h1>
+            <form>
+                <div class="form-group">
+                    <label for="word">Word Finder</label>
+                    <input type="text" class="form-control" id="word" placeholder="Enter word">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="getWord()">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="result"></div>
+        </div>
+    </div>
+</div>
+    <script>
+        function getWord() {
+            var word = document.getElementById("word").value;
+            var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    var output = "";
+                    for (var i = 0; i < response.length; i++) {
+                        output += "<h2>" + response[i].word + "</h2>";
+
+                        output += "<p>" + response[i].phonetics[0].text + "</p>";
+
+                        output += "<p>" + response[i].meanings[0].definitions[0].definition + "</p>";
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost/webapp/db_connection.php",
+                            crossDomain: true,
+
+                            data: {
+                                "word": response[i].word,
+                                "phonetics": response[i].phonetics[0].text,
+                                "definition": response[i].meanings[0].definitions[0].definition
+                            },
+                            success: function (response) {
+                                console.log(response);
+                            }
+                        });
+
+                    }
+                    document.getElementById("result").innerHTML = output;
+
+
+
+
+
+                }
+            };
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+    </script>
+
+
+
+
+</body>
+</html>
+
+

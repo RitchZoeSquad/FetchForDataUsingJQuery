@@ -1,18 +1,34 @@
+<html><head></head><body>'Helloo'
+
 <?php
-function OpenCon()
- {
- $dbhost = "localhost";
- $dbuser = "root";
- $dbpass = "root";
- $db = "Webapp.html";
- $conn = new mysqli($dbhost, $dbuser, $dbpass,$db) or die("Connect failed: %s\n". $conn -> error);
 
- return $conn;
- }
+header('Access-Control-Allow-Origin: *');
 
-function CloseCon($conn)
- {
- $conn -> close();
- }
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "wepapp";
 
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$word = $_POST['word'];
+$phonetics = $_POST['phonetics'];
+$definition = $_POST['definition'];
+$sql = "INSERT INTO words (word, phonetics, definition)
+
+VALUES ('$word', '$phonetics', '$definition')";
+
+if ($conn->query($sql) === TRUE) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+$conn->close();
 ?>
+</body></html>

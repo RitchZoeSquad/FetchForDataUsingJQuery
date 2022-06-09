@@ -24,9 +24,46 @@
                             output += "<p>" + response[i].phonetics[0].text + "</p>";
 
                             output += "<p>" + response[i].meanings[0].definitions[0].definition + "</p>";
-                            output += "<p>" + response[i].meanings[0].definitions[0].example + "</p>";
+
                         }
                         document.getElementById("result").innerHTML = output;
+
+
+
+                        //
+                        send data with ajax with post
+
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:8000/webapp/db_connection.php",
+                            data: {
+                                "word": "test",
+                                "phonetics": [
+                                    {
+                                        "text": "test",
+                                        "audio": "test"
+                                    }
+                                ],
+                                "meanings": [
+                                    {
+                                        "definitions": [
+                                            {
+                                                "definition": "test",
+                                                "example": "test"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            success: function (response) {
+                                console.log(response);
+                            }
+                        });
+
+
+
+
+
                     }
                 };
                 xhttp.open("GET", url, true);
